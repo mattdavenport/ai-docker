@@ -49,7 +49,7 @@ RUN conda install -y --quiet python=$PYTHON_VERSION && \
   matplotlib pandas bcolz sympy scikit-image && \
   pip install --upgrade pip && \
   pip install tensorflow-gpu kaggle-cli && \
-  pip install git+git://github.com/fchollet/keras.git@1.1.2 && \
+  pip install git+git://github.com/fchollet/keras.git@2.0.5 && \
   conda clean -tipsy
 
 ENV CUDA_HOME=/usr/local/cuda
