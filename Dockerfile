@@ -1,15 +1,16 @@
 FROM nvidia/cuda:8.0-cudnn5-devel-ubuntu16.04
 
-MAINTAINER Anurag Goel <deeprig@anur.ag>
+MAINTAINER Anurag Goel <deeprig@anur.ag> / Matt Davenport <matt@mattdavenport.io>
 
-ARG PYTHON_VERSION=2.7
-ARG CONDA_PYTHON_VERSION=2
-ARG CONDA_VERSION=4.2.12
+ARG PYTHON_VERSION=3.6.1
+ARG CONDA_PYTHON_VERSION=3
+ARG CONDA_VERSION=4.4.0
 ARG CONDA_DIR=/opt/conda
-ARG TINI_VERSION=v0.13.2
+ARG TINI_VERSION=v0.15.0
 ARG USERNAME=docker
 ARG USERID=1000
 
+# Initialize
 RUN apt-get update && \
   apt-get install -y --no-install-recommends git wget ffmpeg unzip sudo && \
   apt-get clean && \
@@ -19,9 +20,9 @@ RUN apt-get update && \
 ENV PATH $CONDA_DIR/bin:$PATH
 
 RUN apt-get update && apt-get install -y --no-install-recommends ca-certificates && \
-  wget --quiet https://repo.continuum.io/miniconda/Miniconda$CONDA_PYTHON_VERSION-$CONDA_VERSION-Linux-x86_64.sh -O /tmp/miniconda.sh && \
+  wget --quiet https://repo.continuum.io/archive/Anaconda$CONDA_PYTHON_VERSION-$CONDA_VERSION-Linux-x86_64.sh -O /tmp/conda.sh && \
   echo 'export PATH=$CONDA_DIR/bin:$PATH' > /etc/profile.d/conda.sh && \
-  /bin/bash /tmp/miniconda.sh -b -p $CONDA_DIR && \
+  /bin/bash /tmp/conda.sh -b -p $CONDA_DIR && \
   rm -rf /tmp/* && \
   apt-get clean && \
   rm -rf /var/lib/apt/lists/*
@@ -44,12 +45,9 @@ COPY .theanorc .
 COPY keras.json .keras/
 COPY jupyter_notebook_config.py .jupyter/
 
-RUN conda install -y --quiet python=$PYTHON_VERSION && \
-  conda install -y --quiet notebook h5py Pillow ipywidgets scikit-learn \
-  matplotlib pandas bcolz sympy scikit-image && \
-  pip install --upgrade pip && \
-  pip install tensorflow-gpu kaggle-cli && \
-  pip install git+git://github.com/fchollet/keras.git@1.1.2 && \
+RUN pip3 install --upgrade pip3 && \
+  pip3 install tensorflow-gpu kaggle-cli && \
+  pip3 install git+git://github.com/fchollet/keras.git@2.0.5 && \
   conda clean -tipsy
 
 ENV CUDA_HOME=/usr/local/cuda
