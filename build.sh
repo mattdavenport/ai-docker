@@ -1,2 +1,2 @@
 #!/usr/bin/env bash
-docker build -t deeprig/fastai-course-1 .
+docker build -t mattdavenport/ai-docker .
